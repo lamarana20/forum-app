@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<div id="app">
+    <div>
+<h1>Ma couleur preferer</h1>
+<button @click="alertColor(favoriteColor)">Afficher ma couleur préférée</button>
+</div>
+<div>
+    <h3>Monter ma couleur preferer</h3>
+    <button @click="changeColor">click</button>
+
+</div>
+
+
+<div>
+    <h2>changer ma coulur prefere</h2>
+    <label for="changeColor">changer de couleur</label>
+    <input type="text" id="changeColor" >
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource"></script>
+    
+<script>
+   const app = new Vue({
+    el: '#app',
+    data: {
+        favoriteColor: 'bleu'
+    },
+    computed: {
+        label() {
+            return ': ' + this.favoriteColor
+        }
+    },
+    methods: {
+        alertColor(color) {
+            alert('Ma couleur préférée est ' + color)
+        },
+        changeColor() {
+            console.log('Je veux changer ma couleur préférée !')
+        }
+    }
+})
+
+
+</script>
+</body>
+</html>

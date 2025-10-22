@@ -1,0 +1,18 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="container">
+        <h1>Liste des utilisateurs</h1>
+        <ul class="list-group">
+            @foreach($users as $user)
+                <li class="list-group-item">
+                    {{ $user->name }} <br> {{ $user->email }}
+                    <br>
+                    <a href="{{ route('users.threads', $user) }}">Voir ses threads</a>
+                    <br>
+                    <a href="{{ route('users.posts', $user) }}">Voir ses posts</a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+@endsection

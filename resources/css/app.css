@@ -1,0 +1,8 @@
+a {
+    text-decoration: none; /* Supprime le soulignement par défaut */
+    color: black; /* Couleur initiale des liens */
+}
+
+a:hover {
+    color: blue; /* Couleur des liens au survol */
+}
