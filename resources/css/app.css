@@ -1,8 +1,8 @@
-a {
-    text-decoration: none; /* Supprime le soulignement par défaut */
-    color: black; /* Couleur initiale des liens */
-}
 
-a:hover {
-    color: blue; /* Couleur des liens au survol */
-}
+
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
