@@ -46,12 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/threads/{thread}/edit', [ThreadController::class, 'edit'])->name('threads.edit');
     Route::put('/threads/{thread}', [ThreadController::class, 'update'])->name('threads.update');
     Route::delete('/threads/{thread}', [ThreadController::class, 'destroy'])->name('threads.destroy');
-});
-
-// Thread show route (after specific routes)
-Route::get('/threads/{thread}', [ThreadController::class, 'show'])->name('threads.show');
-
-Route::middleware('auth')->group(function () {
+    
     // Post Management
     Route::get('/threads/{thread}/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/threads/{thread}/posts', [PostController::class, 'store'])->name('posts.store');
@@ -61,18 +56,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     
     // Authenticated User Profile
-    // Profile Routes
-    // Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
-    // Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Thread show route (public - after specific routes)
+Route::get('/threads/{thread}', [ThreadController::class, 'show'])->name('threads.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -80,23 +72,12 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
-Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
-Route::get('/users/{user}/threads', [UserController::class, 'threads'])->name('users.threads');
-Route::get('/users/{user}/posts', [UserController::class, 'posts'])->name('users.posts');
-Route::get('/users/profile/{user}', [UserController::class, 'profile'])->name('users.profile');
-
-
-
-
-
-
-
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
     Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
     Route::get('/{user}/threads', [UserController::class, 'threads'])->name('users.threads');
     Route::get('/{user}/posts', [UserController::class, 'posts'])->name('users.posts');
+    Route::get('/profile/{user}', [UserController::class, 'profile'])->name('users.profile');
 });
 
 /*
