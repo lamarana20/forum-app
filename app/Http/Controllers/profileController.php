@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
     /**
-     * Afficher le profil de l'utilisateur connecté
+     * Display the authenticated user's profile
      */
     public function show()
     {
@@ -18,7 +19,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Afficher le formulaire d'édition du profil
+     * Show the form for editing the user's profile
      */
     public function edit()
     {
@@ -27,7 +28,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Mettre à jour le profil
+     * Update the user's profile
      */
     public function update(Request $request)
     {
@@ -42,11 +43,11 @@ class ProfileController extends Controller
         $user->update($validated);
 
         return redirect()->route('profile.show')
-            ->with('success', 'Profil mis à jour avec succès.');
+            ->with('success', 'Profile updated successfully.');
     }
 
     /**
-     * Mettre à jour le mot de passe
+     * Update the user's password
      */
     public function updatePassword(Request $request)
     {
@@ -62,11 +63,11 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->route('profile.show')
-            ->with('success', 'Mot de passe mis à jour avec succès.');
+            ->with('success', 'Password updated successfully.');
     }
 
     /**
-     * Supprimer le compte
+     * Delete the user's account
      */
     public function destroy(Request $request)
     {
@@ -83,6 +84,6 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('threads.index')
-            ->with('success', 'Votre compte a été supprimé.');
+            ->with('success', 'Your account has been deleted.');
     }
 }
