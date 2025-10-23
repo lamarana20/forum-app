@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use Illuminate\Validation\Rules;
 
 class ProfileController extends Controller
@@ -13,17 +12,13 @@ class ProfileController extends Controller
     use AuthorizesRequests;
 
     /**
-     * Apply auth middleware to all methods
-     */
-  
-    /**
      * Display the authenticated user's profile
      */
     public function show()
     {
         $user = auth()->user();
         
-       return view('profile.show', compact('user'));
+        return view('profile.show', compact('user'));
     }
 
     /**
@@ -82,7 +77,7 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
         
-        // Validate confirmation
+        // Valider la confirmation
         $request->validate([
             'confirm_delete' => 'required|accepted',
         ]);
