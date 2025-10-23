@@ -3,36 +3,31 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
 class ProfileController extends Controller
 {
-    use AuthorizesRequests;
-
     /**
-     * Display the authenticated user's profile
+     * Afficher le profil de l'utilisateur connecté
      */
     public function show()
     {
         $user = auth()->user();
-        
         return view('profile.show', compact('user'));
     }
 
     /**
-     * Show the form for editing the user's profile
+     * Afficher le formulaire d'édition du profil
      */
     public function edit()
     {
         $user = auth()->user();
-        
         return view('profile.edit', compact('user'));
     }
 
     /**
-     * Update the user's profile
+     * Mettre à jour le profil
      */
     public function update(Request $request)
     {
@@ -47,11 +42,11 @@ class ProfileController extends Controller
         $user->update($validated);
 
         return redirect()->route('profile.show')
-            ->with('success', 'Profile updated successfully.');
+            ->with('success', 'Profil mis à jour avec succès.');
     }
 
     /**
-     * Update the user's password
+     * Mettre à jour le mot de passe
      */
     public function updatePassword(Request $request)
     {
@@ -67,25 +62,27 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->route('profile.show')
-            ->with('success', 'Password updated successfully.');
+            ->with('success', 'Mot de passe mis à jour avec succès.');
     }
 
     /**
-     * Delete the user's account
+     * Supprimer le compte
      */
     public function destroy(Request $request)
     {
         $user = auth()->user();
         
-        // Valider la confirmation
         $request->validate([
-            'confirm_delete' => 'required|accepted',
+            'password' => 'required|current_password',
         ]);
 
         auth()->logout();
         $user->delete();
 
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('threads.index')
-            ->with('success', 'Your account has been deleted.');
+            ->with('success', 'Votre compte a été supprimé.');
     }
 }
