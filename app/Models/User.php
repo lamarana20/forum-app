@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+         'bio', 
     ];
 
     /**
@@ -55,5 +56,9 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->is_admin; // Suppose que vous avez une colonne 'is_admin' dans votre table 'users'
+    }
+    public function getRouteKeyName()
+    {
+        return 'name'; // ou 'username' si tu as un champ dédié
     }
 }

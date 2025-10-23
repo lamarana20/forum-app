@@ -61,7 +61,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     
     // Authenticated User Profile
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    // Profile Routes
+    // Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
+    // Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 /*
@@ -75,6 +85,19 @@ Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show')
 Route::get('/users/{user}/threads', [UserController::class, 'threads'])->name('users.threads');
 Route::get('/users/{user}/posts', [UserController::class, 'posts'])->name('users.posts');
 Route::get('/users/profile/{user}', [UserController::class, 'profile'])->name('users.profile');
+
+
+
+
+
+
+
+Route::prefix('users')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::get('/{user}/threads', [UserController::class, 'threads'])->name('users.threads');
+    Route::get('/{user}/posts', [UserController::class, 'posts'])->name('users.posts');
+});
 
 /*
 |--------------------------------------------------------------------------

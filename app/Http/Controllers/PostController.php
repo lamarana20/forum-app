@@ -3,25 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Thread;
 use App\Models\Post;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
+    
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-       
+        $posts = Post::with(['user', 'thread'])->latest()->paginate(20);
+        return view('posts.index', compact('posts'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Thread $thread)
     {
-        
+        return view('posts.create', compact('thread'));
     }
 
     /**
@@ -29,29 +33,29 @@ class PostController extends Controller
      */
     public function store(Request $request, Thread $thread)
     {
-        // Valider les données du formulaire
-        $request->validate([
+        $validated = $request->validate([
             'body' => 'required|string|max:1000',
         ]);
 
-        // Créer un nouveau post associé au fil de discussion
-        $post = new Post();
-        $post->body = $request->body;
-        $post->user_id = auth()->id(); // ou tout autre logique pour récupérer l'ID de l'utilisateur connecté
-        $post->thread_id = $thread->id;
-        $post->save();
+        $post = $thread->posts()->create([
+            'body' => $validated['body'],
+            'user_id' => auth()->id(),
+        ]);
 
         return redirect()->route('threads.show', $thread)
-            ->with('success', 'Post created successfully.');
+            ->with('success', 'Your reply has been posted successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Post $post)
     {
-        $post = Post::find($id);    
-        return view('posts.show', compact('post'));
+        if ($post->thread) {
+            return redirect()->route('threads.show', $post->thread);
+        }
+        
+        abort(404, 'Thread not found');
     }
 
     /**
@@ -59,6 +63,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        // Authorize the 'update' action using a Policy
+        $this->authorize('update', $post);
+        
         return view('posts.edit', compact('post'));
     }
 
@@ -67,15 +74,17 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $request->validate([
-            
-            'body' => 'required',
-
+        // Authorize the 'update' action using a Policy
+        $this->authorize('update', $post);
+        
+        $validated = $request->validate([
+            'body' => 'required|string|max:1000',
         ]);
 
-        $post->update($request->all());
+        $post->update($validated);
 
-        return redirect()->route('threads.index', $post->thread);
+        return redirect()->route('threads.show', $post->thread)
+            ->with('success', 'Post updated successfully.');
     }
 
     /**
@@ -83,8 +92,13 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        // Authorize the 'delete' action using a Policy
+        $this->authorize('delete', $post);
+        
         $thread = $post->thread;
         $post->delete();
-        return redirect()->route('threads.show', $thread);
+        
+        return redirect()->route('threads.show', $thread)
+            ->with('success', 'Post deleted successfully.');
     }
 }

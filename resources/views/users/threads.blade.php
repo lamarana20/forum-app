@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h1>Threads de {{ $user->name }}</h1>
+<div class="max-w-4xl mx-auto px-6 py-8">
+    <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">{{ $user->name }}'s Threads</h1>
 
-        @foreach($threads as $thread)
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ $thread->title }}</h5>
-                    <p class="card-text">{{ $thread->body }}</p>
-                    <p class="card-text"><small class="text-muted">Créé le {{ $thread->created_at->format('d M Y') }}</small></p>
-                </div>
-            </div>
-        @endforeach
+    @forelse ($threads as $thread)
+        <a href="{{ route('threads.show', $thread) }}" class="block bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 mb-3 hover:border-blue-400 transition">
+            <h2 class="font-semibold text-gray-900 dark:text-white">{{ $thread->title }}</h2>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">{{ Str::limit($thread->body, 120) }}</p>
+            <p class="text-xs text-gray-400 mt-2">{{ $thread->created_at->diffForHumans() }}</p>
+        </a>
+    @empty
+        <p class="text-gray-500 dark:text-gray-400">No threads yet.</p>
+    @endforelse
 
-        {{ $threads->links() }} <!-- Pour la pagination -->
-
-    </div>
+    <div class="mt-6">{{ $threads->links() }}</div>
+</div>
+@endsection

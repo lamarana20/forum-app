@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Thread;
+
 class ThreadController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $threads = Thread::with('user')->get();
+        $threads = Thread::with('user')
+            ->withCount('posts')
+            ->latest()
+            ->paginate(15);
+            
         return view('threads.index', compact('threads'));
     }
 
@@ -28,16 +36,15 @@ class ThreadController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'body' => 'required',
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string|max:5000',
         ]);
 
-        $thread = new Thread($request->all());
-        $thread->user_id = auth()->id();
-        $thread->save();
+        $thread = auth()->user()->threads()->create($validated);
 
-        return redirect()->route('threads.index');
+        return redirect()->route('threads.index', $thread)
+            ->with('success', 'Thread created successfully.');
     }
 
     /**
@@ -45,8 +52,7 @@ class ThreadController extends Controller
      */
     public function show(Thread $thread)
     {
-        $thread->load('posts');
-     
+        $thread->load(['posts.user', 'user']);
 
         return view('threads.show', compact('thread'));
     }
@@ -56,6 +62,8 @@ class ThreadController extends Controller
      */
     public function edit(Thread $thread)
     {
+        $this->authorize('update', $thread);
+        
         return view('threads.edit', compact('thread'));
     }
 
@@ -64,14 +72,17 @@ class ThreadController extends Controller
      */
     public function update(Request $request, Thread $thread)
     {
-        $request->validate([
-            'title' => 'required',
-            'body' => 'required',
+        $this->authorize('update', $thread);
+        
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string|max:5000',
         ]);
 
-        $thread->update($request->all());
+        $thread->update($validated);
 
-        return redirect()->route('threads.index');
+        return redirect()->route('threads.show', $thread)
+            ->with('success', 'Thread updated successfully.');
     }
 
     /**
@@ -79,7 +90,11 @@ class ThreadController extends Controller
      */
     public function destroy(Thread $thread)
     {
+        $this->authorize('delete', $thread);
+        
         $thread->delete();
-        return redirect()->route('threads.index');
+        
+        return redirect()->route('threads.index')
+            ->with('success', 'Thread deleted successfully.');
     }
 }
