@@ -87,7 +87,7 @@ button.addEventListener('mouseleave', () =>
 dropdown.addEventListener('mouseenter', () => dropdown.classList.remove('hidden'));
 
 // Hide the dropdown when the mouse leaves the dropdown area
-dropdown.addEventListener('mouseleave', () => dropdown.classList.add('hidden');
+dropdown.addEventListener('mouseleave', () => dropdown.classList.add('hidden'));
 
     </script>
 </body>
