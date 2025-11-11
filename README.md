@@ -385,6 +385,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - GitHub: [@lamarana20](https://github.com/lamarana20)
 - LinkedIn: [Mamadou lamarana Diallo](https://www.linkedin.com/in/mamadou-lamarana-diallo-3737662b7/)
 - Portfolio: [lamaranadiallo.com](https://lamaranadiallo.com)
+
 - Email: mamadoulamakalinko628@gmail.com
 
 ---
